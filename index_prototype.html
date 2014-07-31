@@ -34,11 +34,10 @@
 			width:100%
 		}
 		
-		ul#portrait_images li .overlay {
+		.overlay {
 			position:absolute;
-			width:33%;
-			padding-left:33%;
-			padding-top:65%;
+			width:100%;
+			height:100%;
 			top:0;
 			left:0;
 			margin:.2em
@@ -74,39 +73,38 @@
             
             //====================================//									   // Populate portraits 
             
-            function portrait_create(){
+            var portrait_create = function(){
+                for( i = 0; i < num ; i++ ) {
+                    list_items	= '<li><img class=\"portrait\" src=\"https://advancedimage.com.au/lifebuyimages//' + portraitData[i].DstImage + '\" alt=\"\" /><br/><span>' + portraitData[i].YearPhoto + '<br/><br/></span></li>\n\r';         
+                    $('#portrait_images').append(list_items);
+                    
+                    if(i == num-1 ){
+                        $('#portrait_images').append('<div class=\"stretch\"></div>');
+                    }
+                    //$('#portrait_images').cycle('add', list_items);						// how to add items to cycle
+                } 	
+            };
+			
+			//=====================//														//====== watermark
+			// 
 				
-				for( i = 0; i < num ; i++ ) {
-					list_items	= '<li><img class=\"portrait\" src=\"https://advancedimage.com.au/lifebuyimages//' + portraitData[i].DstImage + '\" alt=\"\" /><br/><span>' + portraitData[i].YearPhoto + '<br/><br/></span></li>\n\r';         
-					$('#portrait_images').append(list_items);
-				} 
-				
-				var watermark = function(){
-					var overlay = document.createElement('img');
-					overlay.setAttribute('src','overlay.png');
-					overlay.setAttribute('alt','');
-					overlay.setAttribute('class','overlay');
-					$('#portrait_images li').append(overlay);
-				}
-
-				watermark();
-            
-			};
+			var watermark = function(){
+				var overlay = document.createElement('img');
+				overlay.setAttribute('src','overlay.png');
+				overlay.setAttribute('alt','');
+				overlay.setAttribute('class','overlay');
+				$('#portrait_images li').append(overlay);
+			}
 			
 			var setHeight = function(){
-					var y = $('.portrait').height()/2,
-						x = $('.overlay').height()/2,
-						padding_top = y - x;
-					$('.overlay').css('padding-top',padding_top);
-					
-					console.log(y);
+				var y = $('.portrait').height();
+				$('.overlay').height(y);
+				console.log(y);
 			}
 			
             portrait_create();
-			
-			$('.portrait').on('load', function(){ 
-				setHeight(); 
-			});
+			watermark();
+			setHeight(); 
 			 
             $window.on("resize", function(){
 				setHeight();
