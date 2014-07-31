@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dynamic Watermark</title>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js?v1.0"></script>
+	
+    <style>
+		
+		body {
+			text-align:center;
+			margin:3em auto;
+		}
+	
+		ul#portrait_images {
+			width:80%;
+			display:block;
+			list-style:none;
+			padding:0
+		}
+	
+		ul#portrait_images li {
+			position:relative;
+			display:inline;
+			width:25%;
+			float:left;
+			padding:.2em;
+			border:1px #ddd solid;
+			margin-right:1em
+		}
+
+		ul#portrait_images li img {
+			width:100%
+		}
+		
+		.overlay {
+			position:absolute;
+			width:100%;
+			height:100%;
+			top:0;
+			left:0;
+			margin:.2em
+		}
+		
+	
+	</style>
+    
+    
+</head>
+
+<body>
+
+    <input id="hPortraitData" type="hidden" value="{'EventID':'110845','ID':'4854770','PrimarySubjectID':'309882','SIC':'LZE5A45PX','LastName':'Isherwood','FirstName':'Meg','DateOfBirth':'1\1\0001 12:00:00 AM','Folder':'Year 6 Blue','SchYr':'6','ImagePortrait':'True','DstImage':'21674/38275/166909418(LZE5A45PX).jpg','CostCode':'Pk13','YearPhoto':'2013','Cost':'4.00','EnrolmentYear':'2007'},{'EventID':'107051','ID':'3098200','PrimarySubjectID':'309882','SIC':'N513Q24KA','LastName':'Isherwood','FirstName':'Meg','DateOfBirth':'9\17\2001 12:00:00 AM','Folder': 'YEAR 3 GOLD','SchYr':'3','ImagePortrait':'True','DstImage':'21674/24222/92123686(X2X5HJ5).jpg','CostCode':'Pk10','YearPhoto':'2010','Cost':'4.00','EnrolmentYear':'2007'},{'EventID':'100962','ID':'309882','PrimarySubjectID':'309882','SIC':'N2BC6PJAL','LastName':'Isherwood','FirstName':'Meg','DateOfBirth':'9\17\2001 12:00:00 AM','Folder':'Year 2 Blue','SchYr':'2','ImagePortrait':'True','DstImage':'21674/19976/100202129(X6F9TNK).jpg','CostCode':'Pk09','YearPhoto':'2009','Cost':'4.00','EnrolmentYear':'2007'}," name="hPortraitData">
+
+	<ul id="portrait_images">
+    
+    </ul>
+
+
+	<script>
+        
+		//---------------------------------------------------//								// Dynamic list creation
+	
+        var portraits, portraitData, num, $window, watermark_list;
+        
+		$window = $(window);
+		
+        $window.load(function() {															// When window has loaded call the below functions
+			
+            portraitData  =  eval("[" + document.getElementById('hPortraitData').value + "]"); 
+            num 	= portraitData.length;												   // get string length 	
+            
+            //====================================//									   // Populate portraits 
+            
+            var portrait_create = function(){
+                for( i = 0; i < num ; i++ ) {
+                    list_items	= '<li><img class=\"portrait\" src=\"https://advancedimage.com.au/lifebuyimages//' + portraitData[i].DstImage + '\" alt=\"\" /><br/><span>' + portraitData[i].YearPhoto + '<br/><br/></span></li>\n\r';         
+                    $('#portrait_images').append(list_items);
+                    
+                    if(i == num-1 ){
+                        $('#portrait_images').append('<div class=\"stretch\"></div>');
+                    }
+                    //$('#portrait_images').cycle('add', list_items);						// how to add items to cycle
+                } 	
+            };
+			
+			//=====================//														//====== watermark
+			// 
+				
+			var watermark = function(){
+				var overlay = document.createElement('img');
+				overlay.setAttribute('src','overlay.png');
+				overlay.setAttribute('alt','');
+				overlay.setAttribute('class','overlay');
+				$('#portrait_images li').append(overlay);
+			}
+			
+			var setHeight = function(){
+				var y = $('.portrait').height();
+				$('.overlay').height(y);
+				console.log(y);
+			}
+			
+            portrait_create();
+			watermark();
+			setHeight(); 
+			 
+            $window.on("resize", function(){
+				setHeight();
+			});
+        
+		});
+        
+		//---------------------------------------------------//								// Photo watermark
+	
+	
+	
+    </script>
+
+</body>
+</html>
